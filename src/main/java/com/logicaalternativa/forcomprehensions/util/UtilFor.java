@@ -2,9 +2,6 @@ package com.logicaalternativa.forcomprehensions.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-
-import javax.management.RuntimeErrorException;
 
 import com.logicaalternativa.forcomprehensions.IFunction;
 import com.logicaalternativa.forcomprehensions.IMapper;
@@ -13,7 +10,12 @@ import com.logicaalternativa.forcomprehensions.Reflexion;
 import com.logicaalternativa.futures.AlternativeFuture;
 import com.logicaalternativa.futures.Monad;
 
-public class UtilFor {
+public final class UtilFor {
+	
+	
+	private UtilFor() {
+		
+	}
 	
 	public static Object[] args( Object...arguments ) {
 		

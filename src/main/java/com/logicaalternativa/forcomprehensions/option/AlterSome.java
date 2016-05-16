@@ -3,15 +3,18 @@ package com.logicaalternativa.forcomprehensions.option;
 import com.logicaalternativa.futures.FunctionMapper;
 import com.logicaalternativa.futures.Monad;
 
-public class AlterSome<T> implements AlterOption<T> {
+public final class AlterSome<T> implements AlterOption<T> {
 	
 	private final T value;
 
-	public T getValue() {
-		return value;
-	}
-
-	public AlterSome( final T value ) {
+	protected AlterSome( final T value ) {
+		
+		if ( value == null ) {
+			
+			throw new IllegalArgumentException( "Value can't be null" );
+			
+		}
+		
 		this.value = value;		
 		
 	}
@@ -29,6 +32,17 @@ public class AlterSome<T> implements AlterOption<T> {
 	@Override
 	public <U> Monad<U> pure(U arg0) {
 		return new AlterSome<U>( arg0 );
+	}
+
+	@Override
+	public Boolean isEmpty() {
+		return true;
+	}
+
+	@Override
+	public T get() {
+		
+		return value;
 	}	
 
 }

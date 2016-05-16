@@ -10,10 +10,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.Executors;
 
+import org.junit.Ignore;
+
 import com.logicaalternativa.forcomprehensions.IFor;
 import com.logicaalternativa.forcomprehensions.build.BuilderFor;
 import com.logicaalternativa.forcomprehensions.option.AlterOption;
-import com.logicaalternativa.forcomprehensions.option.AlterSome;
 import com.logicaalternativa.forcomprehensions.poc.dummy.Dummy;
 import com.logicaalternativa.forcomprehensions.poc.dummy.DummyImp;
 import com.logicaalternativa.forcomprehensions.poc.dummy.LanguageIO;
@@ -22,7 +23,7 @@ import com.logicaalternativa.futures.AlternativeFuture;
 import com.logicaalternativa.futures.imp.AwaitAlternativeFuture;
 import com.logicaalternativa.futures.util.activeobject.imp.BuilderActiveObject;
 
-public class Test {
+public class TestCase {
 
 	@org.junit.Test
 	public void test() throws Exception {
@@ -68,6 +69,7 @@ public class Test {
 	}
 	
 	@org.junit.Test
+	@Ignore
 	public void testWithOption() throws Exception {
 		
 //		LanguageIO languaje = new LanguageIOPure();								
@@ -75,7 +77,7 @@ public class Test {
 				
 		IFor interpreter = BuilderFor.getInstace();
 		
-		AlterOption<String> integerOption = ( AlterOption<String> ) interpreter
+		AlterOption<String> stringOption = ( AlterOption<String> ) interpreter
 				.line( 
 						   var("x"), 
 						   ( s ) -> languaje.read(),
@@ -83,7 +85,7 @@ public class Test {
 						 )
 				.line( 
 						   var("y"), 
-						   (s ) -> languaje.echo( s[0].toString() ),
+						   ( s ) -> languaje.echo( s[0].toString() ),
 						   args( var("x") ) 
 						 )
 			.yield( 
@@ -93,7 +95,7 @@ public class Test {
 	     );
 		
 		
-		String res =  ( ( AlterSome<String>) integerOption ).getValue();
+		String res = stringOption.get();
 		
 		assertEquals("message", res);
 	}
