@@ -137,5 +137,10 @@ public final class UtilFor {
 		
 		
 	}
+	
+	public static Boolean gBol(Object object) {
+		
+		return ( Boolean ) object;
+	}  
 
 }

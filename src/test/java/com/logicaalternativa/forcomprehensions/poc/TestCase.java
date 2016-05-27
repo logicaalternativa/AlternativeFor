@@ -52,10 +52,15 @@ public class TestCase {
 			   args( var("x"), "1" )
 		)
 		.line( 
-			   var("z"), 
+			   var("aaaaaa"), 
 			   function( String.class, invoke( languaje, "dummyConcat" ) ),
-			   args( "oe", "oe" )
+			   args( "aaaaa", "aaaaa" )
 			 )
+		.line( 
+		   var("z"), 
+		   function( String.class, invoke( languaje, "dummyConcat" ) ),
+		   args( "oe", "oe" )
+		 )
 	    .yield( 
 	    		mapper( Integer.class,  invoke( this, "dummyConvert") ),
 	    		args(  var("y"), var("x"), var( "z" ) )
