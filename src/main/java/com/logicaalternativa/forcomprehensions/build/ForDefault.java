@@ -8,6 +8,8 @@ import com.logicaalternativa.futures.Monad;
 
 public class ForDefault extends ForBase {
 	
+	private Monad<?> myMonad = null;
+	
 	protected ForDefault(){
 		
 	}

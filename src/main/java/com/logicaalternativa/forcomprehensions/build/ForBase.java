@@ -2,6 +2,7 @@ package com.logicaalternativa.forcomprehensions.build;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import com.logicaalternativa.forcomprehensions.IFor;
 import com.logicaalternativa.forcomprehensions.IVar;
@@ -13,10 +14,7 @@ public abstract class ForBase implements IFor {
 	
 	protected static enum Empty {EMPTY, NULL};
 	
-	protected IVar lastIVar;
-	
-	protected Monad<?> myMonad = null;
-	
+	protected IVar lastIVar;	
 	
 	protected Object[] newParameters( final Object[] old ) {
 		
@@ -25,30 +23,25 @@ public abstract class ForBase implements IFor {
 			return null;
 		}
 		
-		final Object[] newparam = new Object[ old.length ];
 		
-		int i = 0;
-		
-		for (Object param : old) {
-			
-			if ( param instanceof IVar) {
+		return Stream.of( old )
+			.map (s -> {
+						if ( s instanceof IVar) {
+							
+							final IVar var =  (IVar) s;
+							
+							final Object object = vars.get( var.getName() );
+							
+							return object instanceof Empty ? null : object;
+							
+						} else {
+							
+							return s;
+						}
+						
+				} )
+			 .toArray();
 				
-				IVar var =  (IVar) param;
-				
-				Object object = vars.get( var.getName()  );
-				
-				newparam[i] = object instanceof Empty ? null : object;
-				
-			} else {
-				
-				newparam[i] = param;
-			}
-			
-			i++;
-			
-		}
-		
-		return newparam;			
 		
 	}
 

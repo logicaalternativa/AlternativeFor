@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Stream;
 
 import com.logicaalternativa.forcomprehensions.IFor;
 import com.logicaalternativa.forcomprehensions.IFunction;
@@ -70,8 +71,7 @@ public class ForParallel extends ForBase {
 	}
 	
 	private Monad<?> recursiveFlatMap( Monad<?> fromMonad, IVar iVarToUpdate, BlockingQueue<RegLine<?>> queue ) {
-		
-		
+				
 		if ( queue.isEmpty() ) {
 			
 			return fromMonad;		
@@ -105,6 +105,7 @@ public class ForParallel extends ForBase {
 	private Monad<?> flatMapWhenParamsIsEmpty(Monad<?> fromMonad, IVar iVarToUpdate,
 			BlockingQueue<RegLine<?>> queue, final RegLine<?> regLine,
 			final Object[] args) {
+		
 		final Monad<?> execution = regLine.getFunction().exec( newParameters( args ) );
 		
 		final Monad<?> newMonad = fromMonad.flatMap(
@@ -149,47 +150,22 @@ public class ForParallel extends ForBase {
 	
 	private int countParametersEmpty( final Object[] args, final Map<String, Object> copyVars ) {
 		
-		int cont = 0;
-		
 		if ( args == null ) {
 			
-			return cont;
+			return 0;
 		}
 		
-		for ( Object argument : args ) {
-			
-			boolean findEmpty = argument != null
-								&& argument instanceof IVar;
-			
-			if ( ! findEmpty  ) {
-				
-				continue;
-			}
-			
-			final String name = ( ( IVar ) argument ).getName();
-			
-			final Object value = copyVars.get( name );
-			
-			findEmpty = value != null
-						&& value instanceof Empty;
-			
-			if ( ! findEmpty  ) {
-				
-				continue;
-				
-			}
-			
-			final Empty empty = ( Empty ) value;
-								
-			if ( Empty.EMPTY.equals( empty ) ) {
-				
-				cont++;
-				
-			}		
-			
-		}
+		Long count = Stream.of( args )
+			.filter(s -> s instanceof IVar)
+			.map( s -> ( IVar ) s )
+			.map( s -> copyVars.get( s.getName() ) )
+			.filter( s -> s instanceof Empty )
+			.map( s -> ( Empty ) s )
+			.filter( s -> Empty.EMPTY.equals( s ) )
+			.count()
+			;
 		
-		return cont;	
+		return count.intValue();		
 		
 	}
 

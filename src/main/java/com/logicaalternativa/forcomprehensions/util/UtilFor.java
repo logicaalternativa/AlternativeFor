@@ -7,7 +7,6 @@ import com.logicaalternativa.forcomprehensions.IFunction;
 import com.logicaalternativa.forcomprehensions.IMapper;
 import com.logicaalternativa.forcomprehensions.IVar;
 import com.logicaalternativa.forcomprehensions.Reflexion;
-import com.logicaalternativa.futures.AlternativeFuture;
 import com.logicaalternativa.futures.Monad;
 
 public final class UtilFor {
@@ -61,13 +60,13 @@ public final class UtilFor {
 		
 	}
 	
-	public static <T> IFunction<T> fromFuture (final AlternativeFuture<T> future ) {
+	public static <T, S extends Monad<T>> IFunction<T> fromMonad (final S monad ) {
 		
 		return new IFunction<T>() {
 
 			@Override
-			public AlternativeFuture<T> exec(Object... params) {
-				return future;
+			public S exec(Object... params) {
+				return monad;
 			}
 			
 			
@@ -140,7 +139,18 @@ public final class UtilFor {
 	
 	public static Boolean gBol(Object object) {
 		
-		return ( Boolean ) object;
-	}  
+		return toCast( object, Boolean.class );
+	} 
+	
+	public static String gStr(Object object) {
+		
+		return toCast( object, String.class );
+	} 
+	
+	public  static <T> T toCast( Object object, Class<T> type ) {
+		
+		return object != null ? ( T ) object : null;
+		
+	}
 
 }

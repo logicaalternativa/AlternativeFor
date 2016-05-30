@@ -1,11 +1,11 @@
 package com.logicaalternativa.forcomprehensions.poc;
 
 import static com.logicaalternativa.forcomprehensions.util.UtilFor.args;
-import static com.logicaalternativa.forcomprehensions.util.UtilFor.fromFuture;
 import static com.logicaalternativa.forcomprehensions.util.UtilFor.function;
 import static com.logicaalternativa.forcomprehensions.util.UtilFor.invoke;
 import static com.logicaalternativa.forcomprehensions.util.UtilFor.mapper;
 import static com.logicaalternativa.forcomprehensions.util.UtilFor.var;
+import static com.logicaalternativa.forcomprehensions.util.UtilFor.fromMonad;
 import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.Executors;
@@ -14,6 +14,7 @@ import org.junit.Ignore;
 
 import com.logicaalternativa.forcomprehensions.IFor;
 import com.logicaalternativa.forcomprehensions.build.BuilderFor;
+import com.logicaalternativa.forcomprehensions.build.BuilderFor.Type;
 import com.logicaalternativa.forcomprehensions.option.AlterOption;
 import com.logicaalternativa.forcomprehensions.poc.dummy.Dummy;
 import com.logicaalternativa.forcomprehensions.poc.dummy.DummyImp;
@@ -38,14 +39,29 @@ public class TestCase {
 							.build();
 								
 				
-		IFor interpreter = BuilderFor.getInstace();
+		IFor interpreter = BuilderFor.getInstance(Type.PARALLEL);
 		
 		AlternativeFuture<Integer> integerFuture = (AlternativeFuture<Integer>) interpreter
+		.line( 
+			   var("cc"), 
+			   function( String.class, invoke( languaje, "dummyConcat" ) ),
+			   args( "cc", "cc" )
+			 )
+		.line( 
+			   var("dd"), 
+			   function( String.class, invoke( languaje, "dummyConcat" ) ),
+			   args( "dd", "dd" )
+			 )
+		.line( 
+			   var("ff"), 
+			   function( String.class, invoke( languaje, "dummyConcat" ) ),
+			   args( "ff", "ff" )
+			 )
 		.line( 
 			   var("x"), 
 			   function( String.class, invoke( languaje, "dummy" ) ),
 			   args( "1" ) 
-			 )
+		 )
 		.line( 
 			   var("y"), 
 			   function( String.class, invoke( languaje, "dummyConcat" ) ),
@@ -147,17 +163,17 @@ public class TestCase {
 		.getInstace()
 		.line( 
 			   var("x"), 
-			   fromFuture( future1 ),
+			   fromMonad( future1 ),
 			   null
 			 )
 		.line( 
 			   var("y"), 
-			   fromFuture( future2 ),
+			   fromMonad( future2 ),
 			   null
 		)
 		.line( 
 			   var("z"), 
-			   fromFuture( future3 ),
+			   fromMonad( future3 ),
 			   null
 			 )
 	    .yield( 
@@ -195,7 +211,7 @@ public class TestCase {
 			 )
 		.line( 
 			   var("y"), 
-			   fromFuture( future2 ),
+			   fromMonad( future2 ),
 			   null
 		)
 		.line( 
