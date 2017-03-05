@@ -1,8 +1,8 @@
 package com.logicaalternativa.forcomprehensions.build;
 
+import java.util.function.Function;
+
 import com.logicaalternativa.forcomprehensions.IFor;
-import com.logicaalternativa.forcomprehensions.IFunction;
-import com.logicaalternativa.forcomprehensions.IMapper;
 import com.logicaalternativa.forcomprehensions.IVar;
 import com.logicaalternativa.futures.Monad;
 
@@ -18,8 +18,8 @@ public class ForDefault extends ForBase {
 	
 				
 	@Override
-	public <T> IFor line( final IVar varReturn, final IFunction<T> function,
-			final Object[] parameters) {
+	public <T> IFor line(IVar varReturn, Function<Object[], Monad<T>> function,
+			Object[] parameters) {
 		
 		vars.put(varReturn.getName(), Empty.EMPTY);				
 		
@@ -27,7 +27,7 @@ public class ForDefault extends ForBase {
 
 			lastIVar = varReturn;
 			
-			 myMonad = function.exec( newParameters(parameters ) );					
+			 myMonad = function.apply( newParameters(parameters ) );					
 			 
 		} else {
 			
@@ -35,7 +35,7 @@ public class ForDefault extends ForBase {
 					s -> { 
 							vars.put(lastIVar.getName(), ( s != null ? s : Empty.NULL ) );
 							lastIVar = varReturn;
-							return function.exec( newParameters(parameters ) );
+							return function.apply( newParameters(parameters ) );
 						});		
 			
 			
@@ -44,18 +44,23 @@ public class ForDefault extends ForBase {
 	}
 
 	@Override
-	public <T> Monad<T> yield(final IMapper<T> function,
+	public <T> Monad<T> yield(final Function<Object[], T> function,
 			final Object[] parameters) {
 		
 		return myMonad.map(
 				s -> { 
 						vars.put(lastIVar.getName(), ( s != null ? s : Empty.NULL ) );
 						
-						return function.exec( newParameters(parameters ) );
+						return function.apply( newParameters(parameters ) );
 						 
 				}); 
 		
 	}
+
+
+
+
+	
 	
 	
 

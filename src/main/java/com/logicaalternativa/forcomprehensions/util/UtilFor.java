@@ -2,9 +2,8 @@ package com.logicaalternativa.forcomprehensions.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.function.Function;
 
-import com.logicaalternativa.forcomprehensions.IFunction;
-import com.logicaalternativa.forcomprehensions.IMapper;
 import com.logicaalternativa.forcomprehensions.IVar;
 import com.logicaalternativa.forcomprehensions.Reflexion;
 import com.logicaalternativa.futures.Monad;
@@ -60,66 +59,45 @@ public final class UtilFor {
 		
 	}
 	
-	public static <T, S extends Monad<T>> IFunction<T> fromMonad (final S monad ) {
+	public static <T, S extends Monad<T>> Function<Object[], Monad<T>>  fromMonad (final S monad ) {
 		
-		return new IFunction<T>() {
-
-			@Override
-			public S exec(Object... params) {
-				return monad;
-			}
-			
-			
-		};
-		
+		return s -> monad;
 		
 	}
 	
 	
 	
-	public static <T> IFunction<T> function( final Class<T> typeReturn, final Reflexion reflexion ) {
+	@SuppressWarnings("unchecked")
+	public static <T> Function<Object[], Monad<T>>  function( final Class<T> typeReturn, final Reflexion reflexion ) {
 		
-		return new IFunction<T>() {	
+		return s -> { 
 			
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public Monad<T> exec(Object... params) {
+					try {
 				
-				try {
-				
-					return (Monad<T>) reflexion.invoke(params);
-					
-				} catch (Exception e) {
-					
-					throw new RuntimeException( e );
-				}			
-			}
-			
-			
-		};
+						return (Monad<T>) reflexion.invoke(s);
+						
+					} catch (Exception e) {
+						
+						throw new RuntimeException( e );
+					}			
+				};
 		
 		
 	}
 	
-	public static <T> IMapper<T> mapper( final Class<T> typeReturn, final Reflexion reflexion ){
+	@SuppressWarnings("unchecked")
+	public static <T> Function<Object[], T> mapper( final Class<T> typeReturn, final Reflexion reflexion ){
 		
-		return new IMapper<T>() {
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public T exec(Object... params) {
+		return s -> {
+			
+			try {
+				return (T) reflexion.invoke( s );
 				
-				try {
-					return (T) reflexion.invoke(params);
-					
-				} catch (IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException e) {
-					e.printStackTrace();
-					
-					throw new RuntimeException(e);
-				}
+			} catch (IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException e) {
+				e.printStackTrace();
 				
+				throw new RuntimeException(e);
 			}
 		};
 		

@@ -4,11 +4,10 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.logicaalternativa.forcomprehensions.IFor;
-import com.logicaalternativa.forcomprehensions.IFunction;
-import com.logicaalternativa.forcomprehensions.IMapper;
 import com.logicaalternativa.forcomprehensions.IVar;
 import com.logicaalternativa.futures.Monad;
 
@@ -23,7 +22,7 @@ public class ForParallel extends ForBase {
 	}
 
 	@Override
-	public <T> IFor line(final  IVar varReturn, final IFunction<T> function,
+	public <T> IFor line(final  IVar varReturn, final Function<Object[] , Monad<T>> function,
 			final Object[] parameters) {
 		
 		final String name = varReturn.getName();
@@ -45,14 +44,14 @@ public class ForParallel extends ForBase {
 	}
 
 	@Override
-	public <T> Monad<T> yield(IMapper<T> function, Object[] parameters) {
+	public <T> Monad<T> yield(Function<Object[], T> function, Object[] parameters) {
 		
 		final Monad<?> monad = recursiveConcat( queue );
 		
 		 return monad.map( s -> {
 			 
 			 updateVars( lastIVar, s);	
-			 return function.exec( newParameters( parameters ) );
+			 return function.apply( newParameters( parameters ) );
 			
 		 } );
 		
@@ -64,7 +63,7 @@ public class ForParallel extends ForBase {
 		
 		final Object[] odlParameters = regLine.getParameters();
 		
-		Monad<?> monad = regLine.getFunction().exec(  newParameters( odlParameters )  );
+		Monad<?> monad = regLine.getFunction().apply(  newParameters( odlParameters )  );
 		
 		return recursiveFlatMap( monad, regLine.getVarReturn(), queue );
 		
@@ -106,7 +105,7 @@ public class ForParallel extends ForBase {
 			BlockingQueue<RegLine<?>> queue, final RegLine<?> regLine,
 			final Object[] args) {
 		
-		final Monad<?> execution = regLine.getFunction().exec( newParameters( args ) );
+		final Monad<?> execution = regLine.getFunction().apply( newParameters( args ) );
 		
 		final Monad<?> newMonad = fromMonad.flatMap(
 					s -> {
@@ -125,7 +124,7 @@ public class ForParallel extends ForBase {
 		Monad<?> newMonad = fromMonad.flatMap(
 				s -> {
 					updateVars( iVarToUpdate, s);
-					return regLine.getFunction().exec( newParameters( args ) );
+					return regLine.getFunction().apply( newParameters( args ) );
 			}
 		);
 		
@@ -184,11 +183,11 @@ public class ForParallel extends ForBase {
 	private class RegLine <T> {
 		
 		final IVar varReturn; 
-		final IFunction<T> function;
+		final Function<Object[] , Monad<T>> function;
 		final Object[] parameters;
 		public RegLine(
 				IVar varReturn,
-				IFunction<T> function,
+				Function<Object[] , Monad<T>> function,
 				Object[] parameters) {
 			super();
 			this.varReturn = varReturn;
@@ -200,7 +199,7 @@ public class ForParallel extends ForBase {
 			return varReturn;
 		}
 		
-		public IFunction<T> getFunction() {
+		public Function<Object[] , Monad<T>> getFunction() {
 			return function;
 		}
 		
