@@ -1,11 +1,11 @@
 package com.logicaalternativa.forcomprehensions.poc;
 
 import static com.logicaalternativa.forcomprehensions.util.UtilFor.args;
+import static com.logicaalternativa.forcomprehensions.util.UtilFor.fromMonad;
 import static com.logicaalternativa.forcomprehensions.util.UtilFor.function;
 import static com.logicaalternativa.forcomprehensions.util.UtilFor.invoke;
 import static com.logicaalternativa.forcomprehensions.util.UtilFor.mapper;
 import static com.logicaalternativa.forcomprehensions.util.UtilFor.var;
-import static com.logicaalternativa.forcomprehensions.util.UtilFor.fromMonad;
 import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.Executors;

@@ -82,6 +82,7 @@ public final class UtilFor {
 		return new IFunction<T>() {	
 			
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public Monad<T> exec(Object... params) {
 				
@@ -105,6 +106,7 @@ public final class UtilFor {
 		
 		return new IMapper<T>() {
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public T exec(Object... params) {
 				
@@ -147,6 +149,7 @@ public final class UtilFor {
 		return toCast( object, String.class );
 	} 
 	
+	@SuppressWarnings("unchecked")
 	public  static <T> T toCast( Object object, Class<T> type ) {
 		
 		return object != null ? ( T ) object : null;

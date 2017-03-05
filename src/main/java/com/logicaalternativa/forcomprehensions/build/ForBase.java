@@ -6,7 +6,6 @@ import java.util.stream.Stream;
 
 import com.logicaalternativa.forcomprehensions.IFor;
 import com.logicaalternativa.forcomprehensions.IVar;
-import com.logicaalternativa.futures.Monad;
 
 public abstract class ForBase implements IFor {
 	

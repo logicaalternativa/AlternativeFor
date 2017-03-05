@@ -1,6 +1,7 @@
 package com.logicaalternativa.forcomprehensions.option;
 
-import com.logicaalternativa.futures.FunctionMapper;
+import java.util.function.Function;
+
 import com.logicaalternativa.futures.Monad;
 
 public final class AlterNone<T> implements AlterOption<T> {
@@ -10,13 +11,13 @@ public final class AlterNone<T> implements AlterOption<T> {
 	}
 
 	@Override
-	public <U> Monad<U> flatMap(FunctionMapper<T, Monad<U>> arg0) {
+	public <U> Monad<U> flatMap(Function<T, Monad<U>> arg0) {
 		
 		return new AlterNone<U>();
 	}
 
 	@Override
-	public <U> Monad<U> map(FunctionMapper<T, U> arg0) {
+	public <U> Monad<U> map(Function<T, U> arg0) {
 		
 		return new AlterNone<U>();
 	}
